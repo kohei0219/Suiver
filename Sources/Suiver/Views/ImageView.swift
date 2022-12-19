@@ -29,7 +29,7 @@ struct ImageView: View {
     private let image: Image?
     public init(viewModel: SuiverViewModel, imageIndex: Int) {
         self.viewModel = viewModel
-        self.image = viewModel.getImage(at: imageIndex).image
+        self.image = viewModel.getImage(at: imageIndex)?.image
     }
     var zoomGesture: some Gesture {
         MagnificationGesture()

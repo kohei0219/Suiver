@@ -7,7 +7,10 @@ struct FooterView: View {
     }
     var body: some View {
         VStack {
-            Text("Explain texts about a photo")
+            // In order to fix page text to bottom
+            // When explain text is empty
+            Spacer()
+            Text(viewModel.explainText)
                 .foregroundColor(SuiverConfig.FooterView.textColor)
             Divider()
             Text(viewModel.pageText)
