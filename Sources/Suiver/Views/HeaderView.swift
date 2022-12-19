@@ -9,28 +9,31 @@ struct HeaderView: View {
         self.viewModel = viewModel
     }
     var body: some View {
-        HStack {
-            if SuiverConfig.CloseButton.alignment == .trailing {
-                Spacer()
-            }
-            Button(action: {
-                closeView()
-            }){
-                if SuiverConfig.CloseButton.isBold {
-                    buttonText.bold()
-                        .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-                } else {
-                    buttonText
-                        .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+        VStack {
+            HStack(alignment: .top) {
+                if SuiverConfig.CloseButton.alignment == .trailing {
+                    Spacer()
+                }
+                Button(action: {
+                    closeView()
+                }){
+                    if SuiverConfig.CloseButton.isBold {
+                        buttonText.bold()
+                            .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+                    } else {
+                        buttonText
+                            .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+                    }
+                }
+                .frame(
+                    width: SuiverConfig.CloseButton.size?.width ?? 100,
+                    height: SuiverConfig.CloseButton.size?.height ?? 44
+                )
+                if SuiverConfig.CloseButton.alignment == .leading {
+                    Spacer()
                 }
             }
-            .frame(
-                width: SuiverConfig.CloseButton.size?.width ?? 140,
-                height: SuiverConfig.CloseButton.size?.height ?? 44
-            )
-            if SuiverConfig.CloseButton.alignment == .leading {
-                Spacer()
-            }
+            Spacer()
         }
     }
     

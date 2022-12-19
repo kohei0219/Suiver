@@ -29,7 +29,7 @@ public class SuiverConfig {
         public static var size: CGSize?
         public static var text = NSLocalizedString("Close", comment: "")
         public static var image: UIImage?
-        public static var font: Font = .system(size: 24)
+        public static var font: Font = .system(size: 18)
         public static var textColor: Color = .white
         public static var isBold: Bool = true
         public static var alignment: Alignment = .trailing
