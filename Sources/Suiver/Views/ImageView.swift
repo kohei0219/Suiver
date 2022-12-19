@@ -175,6 +175,6 @@ struct ImageView: View {
 
 struct ImageViewer_Previews: PreviewProvider {
     static var previews: some View {
-        ImageView(viewModel: SuiverViewModel())
+        ImageView(viewModel: SuiverViewModel(images: []))
     }
 }

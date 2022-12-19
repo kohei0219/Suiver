@@ -1,12 +1,40 @@
 import SwiftUI
 
+// Parent view
+// Call this view
 public struct SuiverView: View {
     @ObservedObject var viewModel: SuiverViewModel
-    @State var pageIndex = 0
-    public init(viewModel: SuiverViewModel) {
-        self.viewModel = viewModel
+    public init(images: [SuiverImage]) {
+        self.viewModel = .init(images: images)
     }
     public var body: some View {
+        if viewModel.isHidden {
+            Button(action: {
+                toggleHidden()
+            }){
+                Text("Show Suiver view")
+                   .font(.largeTitle)
+            }
+        } else {
+            SuiverMainView(viewModel: viewModel)
+        }
+    }
+    
+    func toggleHidden() {
+        withAnimation(.easeInOut(duration: SuiverConfig.toggleHiddenAnimationSpeed).delay(SuiverConfig.toggleHiddenAnimationDelay)) {
+            viewModel.showView()
+        }
+    }
+}
+
+// Child view
+struct SuiverMainView: View {
+    @ObservedObject var viewModel: SuiverViewModel
+    @State var pageIndex = 0
+    init(viewModel: SuiverViewModel) {
+        self.viewModel = viewModel
+    }
+    var body: some View {
         TabView(selection: $pageIndex) {
             ImageView(viewModel: viewModel).tag(1)
             ImageView(viewModel: viewModel).tag(2)
@@ -34,6 +62,6 @@ public struct SuiverView: View {
 
 struct SuiverView_Previews: PreviewProvider {
     static var previews: some View {
-        SuiverView(viewModel: SuiverViewModel())
+        SuiverMainView(viewModel: SuiverViewModel(images: []))
     }
 }

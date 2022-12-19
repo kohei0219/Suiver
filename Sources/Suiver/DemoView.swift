@@ -1,32 +1,11 @@
 import SwiftUI
 import PDFKit
 
-struct DemoView: View {
-    var body: some View {
-        SuiverExampleView()
-    }
-}
-
-public struct SuiverExampleView: View {
+public struct DemoView: View {
     public init() {}
-    @ObservedObject var viewModel = SuiverViewModel()
+    private let images: [SuiverImage] = []
     public var body: some View {
-        if viewModel.isHidden {
-            Button(action: {
-                toggleHidden()
-            }){
-                Text("Show Suiver view")
-                   .font(.largeTitle)
-            }
-        } else {
-            SuiverView(viewModel: viewModel)
-        }
-    }
-    
-    func toggleHidden() {
-        withAnimation(.easeInOut(duration: SuiverConfig.toggleHiddenAnimationSpeed).delay(SuiverConfig.toggleHiddenAnimationDelay)) {
-            viewModel.showView()
-        }
+        SuiverView(images: images)
     }
 }
 
