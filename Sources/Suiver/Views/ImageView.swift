@@ -20,6 +20,8 @@ struct ImageView: View {
     @State private var isGestureEnabled: Bool = true
     // Size of screen
     private let screenSize = UIScreen.main.bounds
+    private let screenHalfWidth: CGFloat
+    private let screenHalfHeight: CGFloat
     // Speed of view
     @State private var moveSpeed: CGFloat = 0.1
     private let defalutSpeed: CGFloat = 0.1
@@ -30,6 +32,8 @@ struct ImageView: View {
     public init(viewModel: SuiverViewModel, imageIndex: Int) {
         self.viewModel = viewModel
         self.image = viewModel.getImage(at: imageIndex)?.image
+        screenHalfWidth = screenSize.width / 2
+        screenHalfHeight = screenSize.height / 2
     }
     var zoomGesture: some Gesture {
         MagnificationGesture()
@@ -77,12 +81,26 @@ struct ImageView: View {
         DragGesture()
             .updating($offsetState) { currentState, gestureState, _ in
                 guard isGestureEnabled else { return }
-                gestureState.height = currentState.translation.height
-                gestureState.width = currentState.translation.width
+                let xOff = currentState.translation.width
+                let yOff = currentState.translation.height
+                let dist = sqrt(xOff * xOff + yOff * yOff)
+                let factor = 1 / (dist / screenHalfWidth + 1)
+                // deceleration
+                gestureState.height = currentState.translation.height * factor
+                gestureState.width = currentState.translation.width * factor
             }.onEnded { value in
                 guard isGestureEnabled else { return }
                 offset.height += value.translation.height
                 offset.width += value.translation.width
+                let scaledWidth = screenHalfWidth * currentScale
+                let moveWidth = scaledWidth - screenHalfWidth
+                if offset.width > screenHalfWidth {
+                    // right
+                    resetWidthOffset(moveWidth)
+                } else if offset.width < -screenHalfWidth {
+                    // left
+                    resetWidthOffset(-moveWidth)
+                }
             }
     }
     var doubleTapGesture: some Gesture {
@@ -143,6 +161,17 @@ struct ImageView: View {
         }
     }
     
+    func resetWidthOffset(_ width: CGFloat) {
+        isGestureEnabled = false
+        moveSpeed = slowSpeed
+        offset.width = .zero
+        offset.width = width
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            moveSpeed = defalutSpeed
+            isGestureEnabled = true
+        }
+    }
+    
     func hideFooterHeader() {
         withAnimation(.easeInOut(duration: SuiverConfig.toggleHiddenAnimationSpeed).delay(SuiverConfig.toggleHiddenAnimationDelay)) {
             viewModel.hideFooter()
@@ -166,11 +195,9 @@ struct ImageView: View {
             showFooterHeader()
         } else {
             currentScale = maxScale
-            let halfWidth = screenSize.width / 2
-            let halfHeight = screenSize.height / 2
             
-            offset.width = halfWidth - location.x
-            offset.height = halfHeight - location.y
+            offset.width = screenHalfWidth - location.x
+            offset.height = screenHalfHeight - location.y
             hideFooterHeader()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
