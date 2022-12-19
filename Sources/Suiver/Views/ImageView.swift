@@ -56,7 +56,8 @@ struct ImageView: View {
             }
     }
     var dragGesture: some Gesture {
-        DragGesture()
+        // Set minimumDistance for allowing swipe on TabView in SuiverView
+        DragGesture(minimumDistance: 30)
             .updating($offsetState) { currentState, gestureState, _ in
                 guard isGestureEnabled else { return }
                 gestureState.height = currentState.translation.height
