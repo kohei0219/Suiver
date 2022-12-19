@@ -8,11 +8,13 @@ final public class SuiverViewModel: ObservableObject {
     @Published var currentPage: Int = 1
     @Published var totalPage: Int
     @Published var pageText: String = ""
+    @Published var explainText: String = ""
     
     init(images: [SuiverImage]) {
         self.images = images
         totalPage = images.count
         updatePageText()
+        updateExpalinText()
     }
     
     // MARK: - Parent view
@@ -27,6 +29,7 @@ final public class SuiverViewModel: ObservableObject {
     func updatePageIndex(_ index: Int) {
         currentPage = index
         updatePageText()
+        updateExpalinText()
     }
     
     // MARK: - Header, Footer
@@ -47,8 +50,8 @@ final public class SuiverViewModel: ObservableObject {
     }
     
     // MARK: - Image
-    func getImage(at index: Int) -> SuiverImage {
-        images[index]
+    func getImage(at index: Int) -> SuiverImage? {
+        images.get(index)
     }
     
     func numberOfImages() -> Int {
@@ -58,5 +61,13 @@ final public class SuiverViewModel: ObservableObject {
     // MARK: - Private
     private func updatePageText() {
         pageText = currentPage.description + "/" + totalPage.description
+    }
+    
+    private func updateExpalinText() {
+        guard let updatedExplainText = images.get(currentPage-1)?.text else {
+            explainText = ""
+            return
+        }
+        explainText = updatedExplainText
     }
 }
