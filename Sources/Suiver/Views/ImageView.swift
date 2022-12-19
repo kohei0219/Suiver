@@ -24,9 +24,12 @@ struct ImageView: View {
     @State private var moveSpeed: CGFloat = 0.1
     private let defalutSpeed: CGFloat = 0.1
     private let slowSpeed: CGFloat = 0.4
+    //
     var viewModel: SuiverViewModel
-    public init(viewModel: SuiverViewModel) {
+    private let image: Image?
+    public init(viewModel: SuiverViewModel, imageIndex: Int) {
         self.viewModel = viewModel
+        self.image = viewModel.getImage(at: imageIndex).image
     }
     var zoomGesture: some Gesture {
         MagnificationGesture()
@@ -91,7 +94,7 @@ struct ImageView: View {
         }
     }
     var body: some View {
-        AssetManager.image("img1")?
+        image?
             .resizable()
             .frame(maxWidth: .infinity)
             .aspectRatio(1, contentMode: .fit)
@@ -175,6 +178,6 @@ struct ImageView: View {
 
 struct ImageViewer_Previews: PreviewProvider {
     static var previews: some View {
-        ImageView(viewModel: SuiverViewModel(images: []))
+        ImageView(viewModel: SuiverViewModel(images: []), imageIndex: 0)
     }
 }

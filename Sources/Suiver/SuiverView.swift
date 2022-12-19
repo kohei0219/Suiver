@@ -31,14 +31,16 @@ public struct SuiverView: View {
 struct SuiverMainView: View {
     @ObservedObject var viewModel: SuiverViewModel
     @State var pageIndex = 0
+    private let totalPageNum: Int
     init(viewModel: SuiverViewModel) {
         self.viewModel = viewModel
+        self.totalPageNum = viewModel.numberOfImages()
     }
     var body: some View {
         TabView(selection: $pageIndex) {
-            ImageView(viewModel: viewModel).tag(1)
-            ImageView(viewModel: viewModel).tag(2)
-            ImageView(viewModel: viewModel).tag(3)
+            ForEach(0..<totalPageNum, id: \.self) { i in
+                ImageView(viewModel: viewModel, imageIndex: i).tag(i+1)
+            }
         }
         .onChange(of: pageIndex) { value in
             viewModel.updatePageIndex(value)

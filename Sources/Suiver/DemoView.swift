@@ -3,7 +3,7 @@ import PDFKit
 
 public struct DemoView: View {
     public init() {}
-    private let images: [SuiverImage] = []
+    private let images: [SuiverImage] = [.init(image: AssetManager.image("img1")), .init(image: AssetManager.image("img2")), .init(image: AssetManager.image("img3"))]
     public var body: some View {
         SuiverView(images: images)
     }

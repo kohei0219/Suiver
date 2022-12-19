@@ -1,7 +1,7 @@
 import Combine
 
 final public class SuiverViewModel: ObservableObject {
-    @Published var images: [SuiverImage]
+    private var images: [SuiverImage]
     @Published var isHidden: Bool = true
     @Published var isFooterHidden: Bool = false
     @Published var isHeaderHidden: Bool = false
@@ -15,6 +15,7 @@ final public class SuiverViewModel: ObservableObject {
         updatePageText()
     }
     
+    // MARK: - Parent view
     func hideView() {
         isHidden = true
     }
@@ -28,6 +29,7 @@ final public class SuiverViewModel: ObservableObject {
         updatePageText()
     }
     
+    // MARK: - Header, Footer
     func hideFooter() {
         isFooterHidden = true
     }
@@ -44,6 +46,16 @@ final public class SuiverViewModel: ObservableObject {
         isHeaderHidden = false
     }
     
+    // MARK: - Image
+    func getImage(at index: Int) -> SuiverImage {
+        images[index]
+    }
+    
+    func numberOfImages() -> Int {
+        images.count
+    }
+    
+    // MARK: - Private
     private func updatePageText() {
         pageText = currentPage.description + "/" + totalPage.description
     }
