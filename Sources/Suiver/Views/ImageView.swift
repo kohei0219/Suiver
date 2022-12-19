@@ -61,15 +61,9 @@ struct ImageView: View {
             .updating($offsetState) { currentState, gestureState, _ in
                 guard isGestureEnabled else { return }
                 gestureState.height = currentState.translation.height
-                if isZooming {
-                    gestureState.width = currentState.translation.width
-                }
             }.onEnded { value in
                 guard isGestureEnabled else { return }
                 offset.height += value.translation.height
-                if isZooming {
-                    offset.width += value.translation.width
-                }
                 if isWithinVertical() {
                     resetOffset()
                 } else {
@@ -77,6 +71,18 @@ struct ImageView: View {
                         viewModel.hideView()
                     }
                 }
+            }
+    }
+    var zoomingDragGesture: some Gesture {
+        DragGesture()
+            .updating($offsetState) { currentState, gestureState, _ in
+                guard isGestureEnabled else { return }
+                gestureState.height = currentState.translation.height
+                gestureState.width = currentState.translation.width
+            }.onEnded { value in
+                guard isGestureEnabled else { return }
+                offset.height += value.translation.height
+                offset.width += value.translation.width
             }
     }
     var doubleTapGesture: some Gesture {
@@ -104,7 +110,8 @@ struct ImageView: View {
                 width: isZooming ? offset.width + offsetState.width : 0,
                 height: offset.height + offsetState.height
             ))
-            .gesture(dragGesture)
+            .gesture(isZooming ? nil : dragGesture)
+            .gesture(isZooming ? zoomingDragGesture : nil)
             .gesture(zoomGesture)
             .gesture(doubleTapGesture)
             .animation(.easeInOut(duration: moveSpeed))
